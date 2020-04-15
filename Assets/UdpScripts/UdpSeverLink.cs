@@ -7,6 +7,7 @@ using System.IO;
 using MTFrame.MTEvent;
 using System;
 using Newtonsoft.Json;
+using MTFrame;
 
 //****Udp服务器端****
 //****数据接收在GameHandle脚本接收****

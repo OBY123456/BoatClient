@@ -23,13 +23,6 @@ public enum PanelName
     WaitPanel,
 }
 
-public class RotateData
-{
-    public float Rotate_x;
-    public float Rotate_y;
-    public float Rotate_z;
-}
-
 public class UdpState : BaseState
 {
     //注意state一定要在get里面监听事件，没有的话就写成下面样子
@@ -69,6 +62,7 @@ public class UdpState : BaseState
             switch (panelName)
             {
                 case PanelName.WaitPanel:
+                    CurrentTask.ChangeTask(new WaitTask(this));
                     break;
                 default:
                     break;
@@ -79,7 +73,7 @@ public class UdpState : BaseState
     public override void Enter()
     {
         base.Enter();
-        CurrentTask.ChangeTask(new UdpTask(this));
+        CurrentTask.ChangeTask(new WaitTask(this));
         EventManager.AddUpdateListener(UpdateEventEnumType.Update,"OnUpdate",Onupdate);
     }
 
