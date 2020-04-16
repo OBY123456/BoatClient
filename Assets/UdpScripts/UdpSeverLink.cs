@@ -39,18 +39,6 @@ public class UdpSeverLink : MonoBehaviour
         localServerEngine = new GameLocalServerEngineListener(9999, "Test4");
         localServerEngine.Creat();
 
-        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.People.ToString(), callback);
-    }
-
-    private void callback(EventParamete parameteData)
-    {
-        if(parameteData.EvendName == ParmaterCodes.People.ToString())
-        {
-            string data = parameteData.GetParameter<string>()[0];
-            RotateData rotateData = new RotateData();
-            rotateData = Newtonsoft.Json.JsonConvert.DeserializeObject<RotateData>(data);
-            Cube.localEulerAngles = new Vector3(rotateData.Rotate_x, rotateData.Rotate_y, rotateData.Rotate_z);
-        }
     }
 
     private void Update()
@@ -65,7 +53,7 @@ public class UdpSeverLink : MonoBehaviour
     private void OnDestroy()
     {
         localServerEngine.ShutDown();
-        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.People.ToString(), callback);
+        
     }
 
     public void SendDataToClient(ParmaterCodes parmaterCodes, object obj)
@@ -76,9 +64,6 @@ public class UdpSeverLink : MonoBehaviour
             case ParmaterCodes.index:
                 response.AddParemater((byte)ParmaterCodes.index, obj);
                 Debug.Log("发送信息给客户端:" + obj);
-                break;
-            case ParmaterCodes.People:
-                response.AddParemater((byte)ParmaterCodes.People, JsonConvert.SerializeObject(obj));
                 break;
             default:
                 break;

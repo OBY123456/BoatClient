@@ -50,7 +50,7 @@ public class Main : MonoBehaviour
     {
         Instance = this;
         GameObject.DontDestroyOnLoad(this.gameObject);
-
+        Input.multiTouchEnabled = false;
 #if UNITY_STANDALONE_WIN
         Screen.SetResolution(resolution.x, resolution.y, fullScreen);
 #endif

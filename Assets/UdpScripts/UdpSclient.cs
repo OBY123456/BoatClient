@@ -6,6 +6,7 @@ using NetworkCommonTools;
 using System.IO;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using MTFrame.MTEvent;
 
 //****Udp客户端****
 //****数据接收在GameHandle脚本接收****
@@ -57,13 +58,30 @@ public class UdpSclient : MonoBehaviour
                 response.AddParemater((byte)ParmaterCodes.index, obj);
                 Debug.Log("发送信息给服务器端:" + obj);
                 break;
-            case ParmaterCodes.People:
-                response.AddParemater((byte)ParmaterCodes.People, JsonConvert.SerializeObject(obj));
+            case ParmaterCodes.PanelSwitchData:
+                response.AddParemater((byte)ParmaterCodes.PanelSwitchData, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.BoatRotateX:
+                response.AddParemater((byte)ParmaterCodes.BoatRotateX, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.BoatRotateY:
+                response.AddParemater((byte)ParmaterCodes.BoatRotateY, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.BoatRotateZ:
+                response.AddParemater((byte)ParmaterCodes.BoatRotateZ, JsonConvert.SerializeObject(obj));
                 break;
             default:
                 break;
         }
         localClientEngine?.SendData(response);
+    }
+
+
+    public void PanelChange(PanelName panelName)
+    {
+        EventParamete eventParamete = new EventParamete();
+        eventParamete.AddParameter(panelName);
+        EventManager.TriggerEvent(GenericEventEnumType.Message, TransportType.SwitchPanel.ToString(), eventParamete);
     }
 
     private void OnDestroy()

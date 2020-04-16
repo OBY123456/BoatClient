@@ -12,15 +12,6 @@ public class GameHandle : HandleBase
 
     public override void OnReceiveProcess(INetEngine netEngine, NetPeer netPeer, OperationResponse operation)
     {
-        //这里获取相应数据类型的数据，这里获取的string类型数据
-        string people = operation.GetParemater<string>(ParmaterCodes.People);
-        //当传输的数据中可能出现0的时候，需要自定义一个类来存储这个0
-        if (people != null)
-        {
-            SentDataToState(people, ParmaterCodes.People);
-            return;
-        }
-
         string index = operation.GetParemater<string>(ParmaterCodes.index);
         //引用类型判断是否为null
         if (index != null)

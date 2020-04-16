@@ -17,6 +17,20 @@ public enum OperateCodes : byte
 /// </summary>
 public enum ParmaterCodes : byte
 {
+    /// <summary>
+    /// 字符串类型
+    /// </summary>
     index,
-    People
+
+    /// <summary>
+    /// 切换场景或页面类型
+    /// </summary>
+    PanelSwitchData,
+
+    /*船体展示页传输数据类型枚举*/
+    BoatRotateX,
+
+    BoatRotateY,
+
+    BoatRotateZ,
 }

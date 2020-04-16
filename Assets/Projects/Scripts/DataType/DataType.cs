@@ -2,10 +2,25 @@
 
 namespace MTFrame
 {
-    public class RotateData
+    /*全局按钮页*/
+    public class PanelSwitchData
     {
-        public float Rotate_x;
-        public float Rotate_y;
-        public float Rotate_z;
+        public string PanelName;
+    }
+
+    /*船体展示页*/
+    public class BoatRotateX
+    {
+        public float X;
+    }
+
+    public class BoatRotateY
+    {
+        public float Y;
+    }
+
+    public class BoatRotateZ
+    {
+        public float Z;
     }
 }
