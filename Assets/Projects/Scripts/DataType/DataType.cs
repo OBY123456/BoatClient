@@ -9,18 +9,15 @@ namespace MTFrame
     }
 
     /*船体展示页*/
-    public class BoatRotateX
+    public class BoatRotate
     {
         public float X;
+        public float Y;
+        public float Z;
     }
 
     public class BoatRotateY
     {
-        public float Y;
-    }
-
-    public class BoatRotateZ
-    {
-        public float Z;
+        public float y;
     }
 }

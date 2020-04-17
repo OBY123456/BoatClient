@@ -140,6 +140,11 @@ public class UdpState : BaseState
                     case ParmaterCodes.index:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.index.ToString(), eventParamete);
                         break;
+                    case ParmaterCodes.BoatRotate:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotate.ToString(), eventParamete);
+                        break;
+                    default:
+                        break;
                 }
 
                 

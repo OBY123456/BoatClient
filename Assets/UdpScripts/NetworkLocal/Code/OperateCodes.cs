@@ -28,9 +28,6 @@ public enum ParmaterCodes : byte
     PanelSwitchData,
 
     /*船体展示页传输数据类型枚举*/
-    BoatRotateX,
-
+    BoatRotate,
     BoatRotateY,
-
-    BoatRotateZ,
 }
