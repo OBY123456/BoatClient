@@ -61,11 +61,37 @@ public class UdpSclient : MonoBehaviour
             case ParmaterCodes.PanelSwitchData:
                 response.AddParemater((byte)ParmaterCodes.PanelSwitchData, JsonConvert.SerializeObject(obj));
                 break;
+            /* 船体展示页 */
             case ParmaterCodes.BoatRotate:
                 response.AddParemater((byte)ParmaterCodes.BoatRotate, JsonConvert.SerializeObject(obj));
                 break;
             case ParmaterCodes.BoatRotateY:
                 response.AddParemater((byte)ParmaterCodes.BoatRotateY, JsonConvert.SerializeObject(obj));
+                break;
+            /* 模拟航行页 */
+            case ParmaterCodes.BoatSpeed:
+                response.AddParemater((byte)ParmaterCodes.BoatSpeed, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.CameraState:
+                response.AddParemater((byte)ParmaterCodes.CameraState, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.DayNightTime:
+                response.AddParemater((byte)ParmaterCodes.DayNightTime, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.OceanLightData:
+                response.AddParemater((byte)ParmaterCodes.OceanLightData, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.OceanWaveSize:
+                response.AddParemater((byte)ParmaterCodes.OceanWaveSize, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.TargetPosition:
+                response.AddParemater((byte)ParmaterCodes.TargetPosition, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.WeatherIntensity:
+                response.AddParemater((byte)ParmaterCodes.WeatherIntensity, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.WeatherType:
+                response.AddParemater((byte)ParmaterCodes.WeatherType, JsonConvert.SerializeObject(obj));
                 break;
             default:
                 break;
