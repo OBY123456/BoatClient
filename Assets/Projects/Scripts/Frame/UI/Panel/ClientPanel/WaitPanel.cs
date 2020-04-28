@@ -6,19 +6,24 @@ using UnityEngine.UI;
 
 public class WaitPanel : BasePanel
 {
-    public Button button;
+    public Button DisplayButton, xunlianButton;
 
     public override void InitFind()
     {
         base.InitFind();
-        button = FindTool.FindChildComponent<Button>(transform, "bg");
+        DisplayButton = FindTool.FindChildComponent<Button>(transform, "DisplayButton");
+        xunlianButton = FindTool.FindChildComponent<Button>(transform, "xunlianButton");
     }
 
     public override void InitEvent()
     {
         base.InitEvent();
-        button.onClick.AddListener(() => {
+        DisplayButton.onClick.AddListener(() => {
+            UdpSclient.Instance.SceneChange(SceneName.DisplayScene,PanelName.DisplayPanel);
+        });
 
+        xunlianButton.onClick.AddListener(() => {
+            UdpSclient.Instance.SceneChange(SceneName.Sailing,PanelName.SailingPanel);
         });
     }
 
@@ -31,4 +36,6 @@ public class WaitPanel : BasePanel
     {
         base.Hide();
     }
+
+
 }

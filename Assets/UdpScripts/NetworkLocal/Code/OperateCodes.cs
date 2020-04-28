@@ -23,9 +23,9 @@ public enum ParmaterCodes : byte
     index,
 
     /// <summary>
-    /// 切换场景或页面类型
+    /// 切换场景
     /// </summary>
-    PanelSwitchData,
+    SceneSwitch,
 
     /*船体展示页传输数据类型枚举*/
     /// <summary>
@@ -35,7 +35,11 @@ public enum ParmaterCodes : byte
     /// <summary>
     /// 船体展示页2
     /// </summary>
-    BoatRotateY,
+    Display_PlayVideo,
+    /// <summary>
+    /// 船体展示页3
+    /// </summary>
+    Display_VideoControl,
 
     /*模拟航行页传输数据类型枚举*/
     /// <summary>

@@ -20,7 +20,7 @@ public class SailingPanel : BasePanel
 
     public InputField PositionX;
     public InputField PositionY;
-    public Button SetingButton;
+    public Button SetingButton,backButton;
 
     public override void InitFind()
     {
@@ -35,12 +35,17 @@ public class SailingPanel : BasePanel
         PositionX = FindTool.FindChildComponent<InputField>(transform, "TargetPosition/InputField");
         PositionY = FindTool.FindChildComponent<InputField>(transform, "TargetPosition/InputField (1)");
         SetingButton = FindTool.FindChildComponent<Button>(transform, "TargetPosition/Button");
+        backButton = FindTool.FindChildComponent<Button>(transform, "backButton");
     }
 
     public override void InitEvent()
     {
         base.InitEvent();
         dropdown.onValueChanged.AddListener((int value) => { WeatherChange(value); });
+
+        backButton.onClick.AddListener(() => {
+            UdpSclient.Instance.SceneChange(SceneName.WaitScene, PanelName.WaitPanel);
+        });
 
         SetingButton.onClick.AddListener(() => {
             TargetPosition targetPosition = new TargetPosition();

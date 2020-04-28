@@ -29,29 +29,14 @@ public enum PanelName
     WaitPanel = 0,
 
     /// <summary>
-    /// 产品介绍页
-    /// </summary>
-    IntroductionPanel = 1,
-
-    /// <summary>
     /// 船体展示页
     /// </summary>
-    DisplayPanel = 2,
-
-    /// <summary>
-    /// DP动力定位页
-    /// </summary>
-    DpPanel = 3,
-
-    /// <summary>
-    /// 作业工况页
-    /// </summary>
-    WorkPanel = 4,
+    DisplayPanel = 1,
 
     /// <summary>
     /// 海上航行页
     /// </summary>
-    SailingPanel = 5,
+    SailingPanel = 2,
 }
 
 public class UdpState : BaseState
@@ -95,17 +80,8 @@ public class UdpState : BaseState
                 case PanelName.WaitPanel:
                     CurrentTask.ChangeTask(new WaitTask(this));
                     break;
-                case PanelName.IntroductionPanel:
-                    CurrentTask.ChangeTask(new IntroductionTask(this));
-                    break;
                 case PanelName.DisplayPanel:
                     CurrentTask.ChangeTask(new DisplayTask(this));
-                    break;
-                case PanelName.DpPanel:
-                    CurrentTask.ChangeTask(new DpTask(this));
-                    break;
-                case PanelName.WorkPanel:
-                    CurrentTask.ChangeTask(new WorkTask(this));
                     break;
                 case PanelName.SailingPanel:
                     CurrentTask.ChangeTask(new SailingTask(this));
@@ -120,7 +96,7 @@ public class UdpState : BaseState
     {
         base.Enter();
         CurrentTask.ChangeTask(new WaitTask(this));
-        UIManager.CreatePanel<GlobalButtonPanel>(WindowTypeEnum.Screen);
+        //UIManager.CreatePanel<GlobalButtonPanel>(WindowTypeEnum.Screen);
         EventManager.AddUpdateListener(UpdateEventEnumType.Update,"OnUpdate",Onupdate);
     }
 

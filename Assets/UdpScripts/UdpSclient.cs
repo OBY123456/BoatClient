@@ -7,6 +7,7 @@ using System.IO;
 using UnityEngine.UI;
 using Newtonsoft.Json;
 using MTFrame.MTEvent;
+using MTFrame;
 
 //****Udp客户端****
 //****数据接收在GameHandle脚本接收****
@@ -38,10 +39,10 @@ public class UdpSclient : MonoBehaviour
     void Update()
     {
         //测试用
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            SendDataToSever(ParmaterCodes.index, "你好，服务器端！");
-        }
+        //if (Input.GetKeyDown(KeyCode.D))
+        //{
+        //    SendDataToSever(ParmaterCodes.index, "你好，服务器端！");
+        //}
     }
 
     /// <summary>
@@ -58,15 +59,18 @@ public class UdpSclient : MonoBehaviour
                 response.AddParemater((byte)ParmaterCodes.index, obj);
                 Debug.Log("发送信息给服务器端:" + obj);
                 break;
-            case ParmaterCodes.PanelSwitchData:
-                response.AddParemater((byte)ParmaterCodes.PanelSwitchData, JsonConvert.SerializeObject(obj));
+            case ParmaterCodes.SceneSwitch:
+                response.AddParemater((byte)ParmaterCodes.SceneSwitch, JsonConvert.SerializeObject(obj));
                 break;
             /* 船体展示页 */
             case ParmaterCodes.BoatRotate:
                 response.AddParemater((byte)ParmaterCodes.BoatRotate, JsonConvert.SerializeObject(obj));
                 break;
-            case ParmaterCodes.BoatRotateY:
-                response.AddParemater((byte)ParmaterCodes.BoatRotateY, JsonConvert.SerializeObject(obj));
+            case ParmaterCodes.Display_PlayVideo:
+                response.AddParemater((byte)ParmaterCodes.Display_PlayVideo, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.Display_VideoControl:
+                response.AddParemater((byte)ParmaterCodes.Display_VideoControl, JsonConvert.SerializeObject(obj));
                 break;
             /* 模拟航行页 */
             case ParmaterCodes.BoatSpeed:
@@ -100,11 +104,14 @@ public class UdpSclient : MonoBehaviour
     }
 
 
-    public void PanelChange(PanelName panelName)
+    public void SceneChange(SceneName sceneName,PanelName panelName)
     {
         EventParamete eventParamete = new EventParamete();
         eventParamete.AddParameter(panelName);
         EventManager.TriggerEvent(GenericEventEnumType.Message, TransportType.SwitchPanel.ToString(), eventParamete);
+        SceneSwitch data = new SceneSwitch();
+        data.SceneName = sceneName.ToString();
+        SendDataToSever(ParmaterCodes.SceneSwitch, data);
     }
 
     private void OnDestroy()

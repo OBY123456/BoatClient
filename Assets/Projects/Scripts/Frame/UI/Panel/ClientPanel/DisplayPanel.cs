@@ -9,26 +9,121 @@ public class DisplayPanel : BasePanel
 {
     private BoatRotate boatRotate = new BoatRotate();
     private float RotateSpeed = 2.0f;
+
     private bool IsRotate = false;
-    public Slider slider;
+
+    private bool IsPlay;
+
+    public Button backButton, ResetButton;
+
+    public Button[] VideoButton;
+
+    public Button VideoFinishButton, PlayButton, SlowButton, QuickButton;
+
+    public Slider VideoSlider;
+    private float VideoLenth = 7;
+    private float ForwordTime = 1;
 
     public override void InitFind()
     {
         base.InitFind();
-        slider = FindTool.FindChildComponent<Slider>(transform, "Slider");
+        backButton = FindTool.FindChildComponent<Button>(transform, "backButton");
+        ResetButton = FindTool.FindChildComponent<Button>(transform, "ResetButton");
+        VideoButton = FindTool.FindChildNode(transform, "VideoPlayGroup").GetComponentsInChildren<Button>();
+        VideoFinishButton = FindTool.FindChildComponent<Button>(transform, "VideoFinishButton");
+        PlayButton = FindTool.FindChildComponent<Button>(transform, "VideoControl/PlayButton");
+        SlowButton = FindTool.FindChildComponent<Button>(transform, "VideoControl/SlowButton");
+        QuickButton = FindTool.FindChildComponent<Button>(transform, "VideoControl/QuickButton");
+        VideoSlider = FindTool.FindChildComponent<Slider>(transform, "VideoControl/Slider");
     }
 
     public override void InitEvent()
     {
         base.InitEvent();
+        backButton.onClick.AddListener(() => {
+            UdpSclient.Instance.SceneChange(SceneName.WaitScene,PanelName.WaitPanel);
+        });
+
+        ResetButton.onClick.AddListener(() => {
+            ObjectManager.Instance.Cube.transform.localEulerAngles = Vector3.zero;
+            SentRotateData(ObjectManager.Instance.Cube.transform);
+        });
+
+        for (int i = 0; i < VideoButton.Length; i++)
+        {
+            SetButtonOnclick(VideoButton[i], i);
+        }
+
+        VideoFinishButton.onClick.AddListener(() => {
+           
+            Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
+            display_PlayVideo.name = VideoName.结束.ToString(); ;
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.Display_PlayVideo, display_PlayVideo);
+            IsPlay = false;
+            SetSlider(1);
+        });
+
+        PlayButton.onClick.AddListener(() => {
+            if(IsPlay)
+            {
+                SentVideoStateData(VideoControl.暂停);
+                IsPlay = false;
+            }
+            else
+            {
+                SentVideoStateData(VideoControl.播放);
+                IsPlay = true;
+            }
+        });
+
+        QuickButton.onClick.AddListener(() => {
+            if(VideoSlider.maxValue > 1)
+            {
+                SentVideoStateData(VideoControl.快进);
+                VideoSlider.value += ForwordTime;
+            }
+
+        });
+
+        SlowButton.onClick.AddListener(() => {
+            if(VideoSlider.maxValue > 1)
+            {
+                SentVideoStateData(VideoControl.快退);
+                VideoSlider.value -= ForwordTime;
+            }
+
+        });
+    }
+
+    private void SentVideoStateData(VideoControl state)
+    {
+        Display_VideoControl display_VideoControl = new Display_VideoControl();
+        display_VideoControl.state = state.ToString();
+        UdpSclient.Instance.SendDataToSever(ParmaterCodes.Display_VideoControl, display_VideoControl);
+    }
+
+    private void SetButtonOnclick(Button button,int i)
+    {
+        button.onClick.AddListener(() => {
+            VideoName panelName = (VideoName)Enum.Parse(typeof(VideoName), (i + 1).ToString());
+            Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
+            display_PlayVideo.name = panelName.ToString();
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.Display_PlayVideo, display_PlayVideo);
+            SetSlider(7);
+            IsPlay = true;
+        });
+    }
+
+    private void SetSlider(float value)
+    {
+        VideoSlider.maxValue = value;
+        VideoSlider.value = 0;
     }
 
     public override void Open()
     {
         base.Open();
-        IsRotate = false;
-        ObjectManager.Instance.Cube.SetActive(true);
-        ObjectManager.Instance.Cube.transform.localEulerAngles = new Vector3(-90, 0, 0);
+        Reset();
         EventManager.AddUpdateListener(MTFrame.MTEvent.UpdateEventEnumType.Update, "DisplayUpdate", DisplayUpdate);
     }
 
@@ -36,15 +131,18 @@ public class DisplayPanel : BasePanel
     private Vector3 oldBoatPos, newBoatPos;
     private float TimeInterval = 0.0f;
 
-    public void ValueOnChange()
-    {
-        BoatRotateY boatRotateY = new BoatRotateY();
-        boatRotateY.y = slider.value;
-        UdpSclient.Instance.SendDataToSever(ParmaterCodes.BoatRotateY, boatRotateY);
-    }
-
     private void DisplayUpdate(float timeProcess)
     {
+
+        if(IsPlay && VideoSlider.maxValue > 1)
+        {
+            VideoSlider.value += Time.deltaTime;
+            if(VideoSlider.value >= VideoLenth)
+            {
+                VideoSlider.value = 0;
+            }
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             newPos = Input.mousePosition;
@@ -144,5 +242,18 @@ public class DisplayPanel : BasePanel
         boatRotate.Z = trans.localEulerAngles.z;
 
         UdpSclient.Instance.SendDataToSever(ParmaterCodes.BoatRotate, boatRotate);
+    }
+
+    private void Reset()
+    {
+        IsRotate = false;
+        IsPlay = false;
+
+        TimeInterval = VideoSlider.value = 0;
+
+        oldPos = newPos = oldBoatPos = newBoatPos = Vector3.zero;
+
+        ObjectManager.Instance.Cube.SetActive(true);
+        ObjectManager.Instance.Cube.transform.localEulerAngles = Vector3.zero;
     }
 }

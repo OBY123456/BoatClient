@@ -3,9 +3,17 @@
 namespace MTFrame
 {
     /*全局按钮页*/
-    public class PanelSwitchData
+
+    public class SceneSwitch
     {
-        public string PanelName;
+        public string SceneName;
+    }
+
+    public enum SceneName
+    {
+        Sailing,
+        WaitScene,
+        DisplayScene,
     }
 
     /*船体展示页*/
@@ -16,9 +24,32 @@ namespace MTFrame
         public float Z;
     }
 
-    public class BoatRotateY
+    public enum VideoName
     {
-        public float y;
+        起吊系统 = 1,
+        J型铺管 = 2,
+        S型铺管 = 3,
+        推进器系统 = 4,
+        动力系统 = 5,
+        结束 = 6,
+    }
+
+    public enum VideoControl
+    {
+        快进,
+        快退,
+        暂停,
+        播放,
+    }
+
+    public class Display_PlayVideo
+    {
+        public string name;
+    }
+
+    public class Display_VideoControl
+    {
+        public string state;
     }
 
     /*模拟航行页*/
