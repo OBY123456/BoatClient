@@ -18,23 +18,37 @@ public class DisplayPanel : BasePanel
 
     public Button[] VideoButton;
 
+    public Sprite[] Video_Sprite_click, Video_Sprite_NotClick;
+
     public Button VideoFinishButton, PlayButton, SlowButton, QuickButton;
 
     public Slider VideoSlider;
     private float VideoLenth = 7;
     private float ForwordTime = 1;
 
+    public Color blue;
+
+    public Text TrainText,Panel_TiltleText,VideoControl_TiltleText;
+    public Image VideControl_TipImage, VideControl_Mask;
+
+
     public override void InitFind()
     {
         base.InitFind();
-        backButton = FindTool.FindChildComponent<Button>(transform, "backButton");
+        backButton = FindTool.FindChildComponent<Button>(transform, "BackButtonGroup");
         ResetButton = FindTool.FindChildComponent<Button>(transform, "ResetButton");
         VideoButton = FindTool.FindChildNode(transform, "VideoPlayGroup").GetComponentsInChildren<Button>();
-        VideoFinishButton = FindTool.FindChildComponent<Button>(transform, "VideoFinishButton");
+        VideoFinishButton = FindTool.FindChildComponent<Button>(transform, "VideoControl/VideoFinishButton");
         PlayButton = FindTool.FindChildComponent<Button>(transform, "VideoControl/PlayButton");
         SlowButton = FindTool.FindChildComponent<Button>(transform, "VideoControl/SlowButton");
         QuickButton = FindTool.FindChildComponent<Button>(transform, "VideoControl/QuickButton");
         VideoSlider = FindTool.FindChildComponent<Slider>(transform, "VideoControl/Slider");
+
+        VideoControl_TiltleText = FindTool.FindChildComponent<Text>(transform, "VideoControl/VideoText");
+        VideControl_TipImage = FindTool.FindChildComponent<Image>(transform, "VideoControl/TipImage");
+        TrainText = FindTool.FindChildComponent<Text>(transform, "TrainButton/Text");
+        Panel_TiltleText = FindTool.FindChildComponent<Text>(transform, "TiltleText");
+        VideControl_Mask = FindTool.FindChildComponent<Image>(transform, "VideoControl/Mask");
     }
 
     public override void InitEvent()
@@ -59,6 +73,8 @@ public class DisplayPanel : BasePanel
             Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
             display_PlayVideo.name = VideoName.结束.ToString(); ;
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.Display_PlayVideo, display_PlayVideo);
+            VideControl_Mask.gameObject.SetActive(true);
+            ResetVideoButtonSprite();
             IsPlay = false;
             SetSlider(1);
         });
@@ -105,6 +121,16 @@ public class DisplayPanel : BasePanel
     private void SetButtonOnclick(Button button,int i)
     {
         button.onClick.AddListener(() => {
+
+            ResetVideoButtonSprite();
+            VideoButton[i].gameObject.GetComponent<Image>().sprite = Video_Sprite_click[i];
+            VideoButton[i].transform.GetChild(0).GetComponent<Text>().color = blue;
+
+            VideoControl_TiltleText.text = VideoButton[i].transform.GetChild(0).GetComponent<Text>().text;
+            VideControl_TipImage.sprite = Video_Sprite_NotClick[i];
+
+            VideControl_Mask.gameObject.SetActive(false);
+
             VideoName panelName = (VideoName)Enum.Parse(typeof(VideoName), (i + 1).ToString());
             Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
             display_PlayVideo.name = panelName.ToString();
@@ -112,6 +138,15 @@ public class DisplayPanel : BasePanel
             SetSlider(7);
             IsPlay = true;
         });
+    }
+
+    private void ResetVideoButtonSprite()
+    {
+        for (int i = 0; i < VideoButton.Length; i++)
+        {
+            VideoButton[i].gameObject.GetComponent<Image>().sprite = Video_Sprite_NotClick[i];
+            VideoButton[i].transform.GetChild(0).GetComponent<Text>().color = Color.black;
+        }
     }
 
     private void SetSlider(float value)
@@ -255,5 +290,10 @@ public class DisplayPanel : BasePanel
 
         ObjectManager.Instance.Cube.SetActive(true);
         ObjectManager.Instance.Cube.transform.localEulerAngles = Vector3.zero;
+
+        ResetVideoButtonSprite();
+        VideoControl_TiltleText.text = "起吊系统";
+        VideControl_Mask.gameObject.SetActive(true);
+        VideControl_TipImage.sprite = Video_Sprite_NotClick[0];
     }
 }

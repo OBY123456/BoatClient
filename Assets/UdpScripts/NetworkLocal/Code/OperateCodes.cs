@@ -74,4 +74,8 @@ public enum ParmaterCodes : byte
     /// 模拟航行页8
     /// </summary>
     TargetPosition,
+    /// <summary>
+    /// 模拟航行页9
+    /// </summary>
+    TrainModelData,
 }

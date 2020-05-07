@@ -106,7 +106,7 @@ namespace MTFrame
     }
 
     /// <summary>
-    /// 是否开启多画面模式
+    /// 是否切换摄像机
     /// </summary>
     public class CameraState
     {
@@ -127,8 +127,8 @@ namespace MTFrame
     /// </summary>
     public enum CameraSwitch
     {
-        Open,
-        Close,
+        FirstPerson,
+        ThirdPerson,
     }
 
     /// <summary>
@@ -159,5 +159,29 @@ namespace MTFrame
     {
         day,
         night,
+    }
+
+    /// <summary>
+    /// 训练模式
+    /// </summary>
+    public enum TrainModel
+    {
+        /// <summary>
+        /// 转场训练
+        /// </summary>
+        Transitions = 0,
+        /// <summary>
+        /// 铺管训练
+        /// </summary>
+        Laying = 1,
+        /// <summary>
+        /// 吊装训练
+        /// </summary>
+        Lifting = 2,
+    }
+
+    public class TrainModelData
+    {
+        public string trainModel;
     }
 }

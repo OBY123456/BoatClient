@@ -4,112 +4,203 @@ using UnityEngine;
 using MTFrame;
 using UnityEngine.UI;
 using System;
+using DG.Tweening;
 
 public class SailingPanel : BasePanel
 {
-    public Slider Speedsliders, WaveSlider;
+    public Slider WaveSlider;
 
-    public Slider IntensitySlider;
+    public Button[] WeatherButtons;
+    public Button[] DayNightButtons;
+    public Button BackButton;
+    public Button SwitchButton, DisplayButton;
+    public Button[] ViewButtons;
 
-    public Text IntensityText;
+    public TrainButton[] TrainButtons;
 
-    public Toggle CameraToggle;
-    public Toggle DayNightToggle;
+    public Sprite[] Weather_Sprite_Click, Weather_Sprite_NotClick, DayNight_Sprite_Click, DayNight_Sprite_NotClick;
 
-    public Dropdown dropdown;
+    public Color blue;
 
-    public InputField PositionX;
-    public InputField PositionY;
-    public Button SetingButton,backButton;
+    public RectTransform View_Black_bg;
+    public Text[] ViewTextGroup;
+    private Vector2 StartPoint = new Vector2(-159,0);
+    private Vector2 EndPoint = new Vector2(159,0);
+
+    public Text TiltleText;
+
 
     public override void InitFind()
     {
         base.InitFind();
-        Speedsliders = FindTool.FindChildComponent<Slider>(transform, "SpeedSlider/Slider");
-        WaveSlider = FindTool.FindChildComponent<Slider>(transform, "WaveSlider/Slider");
-        IntensitySlider = FindTool.FindChildComponent<Slider>(transform, "Weather/Slider");
-        IntensityText = FindTool.FindChildComponent<Text>(transform, "Weather/Text");
-        CameraToggle = FindTool.FindChildComponent<Toggle>(transform, "CameraToggle");
-        DayNightToggle = FindTool.FindChildComponent<Toggle>(transform, "DayNightToggle");
-        dropdown = FindTool.FindChildComponent<Dropdown>(transform, "Weather/Dropdown");
-        PositionX = FindTool.FindChildComponent<InputField>(transform, "TargetPosition/InputField");
-        PositionY = FindTool.FindChildComponent<InputField>(transform, "TargetPosition/InputField (1)");
-        SetingButton = FindTool.FindChildComponent<Button>(transform, "TargetPosition/Button");
-        backButton = FindTool.FindChildComponent<Button>(transform, "backButton");
+        WaveSlider = FindTool.FindChildComponent<Slider>(transform, "WaveButtonGroup/Slider");
+
+        WeatherButtons = FindTool.FindChildNode(transform, "WeatherButtonGroup").GetComponentsInChildren<Button>();
+        DayNightButtons = FindTool.FindChildNode(transform, "DayNightButtonGroup").GetComponentsInChildren<Button>();
+        BackButton = FindTool.FindChildComponent<Button>(transform, "BackButtonGroup");
+        SwitchButton = FindTool.FindChildComponent<Button>(transform, "SwitchButton");
+        DisplayButton = FindTool.FindChildComponent<Button>(transform, "DisPlayButton");
+        ViewButtons = FindTool.FindChildNode(transform, "ViewButtonGroup").GetComponentsInChildren<Button>();
+
+        TrainButtons = FindTool.FindChildNode(transform, "TrainModelButtonGroup").GetComponentsInChildren<TrainButton>();
+
+        View_Black_bg = FindTool.FindChildComponent<RectTransform>(transform, "ViewButtonGroup/bg");
+        ViewTextGroup = FindTool.FindChildNode(transform, "ViewButtonGroup").GetComponentsInChildren<Text>();
+
+        TiltleText = FindTool.FindChildComponent<Text>(transform, "TiltleText");
     }
 
     public override void InitEvent()
     {
         base.InitEvent();
-        dropdown.onValueChanged.AddListener((int value) => { WeatherChange(value); });
 
-        backButton.onClick.AddListener(() => {
+        for (int i = 0; i < WeatherButtons.Length; i++)
+        {
+            InitWeatherButtons(WeatherButtons[i], i);
+        }
+
+        for (int i = 0; i < DayNightButtons.Length; i++)
+        {
+            InitDayNightButtons(DayNightButtons[i], i);
+        }
+
+        for (int i = 0; i < TrainButtons.Length; i++)
+        {
+            InitTrainButtons(TrainButtons[i].button, i);
+        }
+
+        ViewButtons[0].onClick.AddListener(() => {
+            ViewFirstPerson();
+        });
+
+        ViewButtons[1].onClick.AddListener(() => {
+
+            View_Black_bg.DOAnchorPos(EndPoint, 0.1f).OnComplete(()=> {
+                ViewTextGroup[0].color = Color.black;
+                ViewTextGroup[1].color = blue;
+            });
+
+            CameraState state = new CameraState();
+            state.state = CameraSwitch.ThirdPerson.ToString();
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, state);
+        });
+
+        SwitchButton.onClick.AddListener(() => {
+            Text text = SwitchButton.gameObject.transform.GetChild(0).GetComponent<Text>();
+            if (text.color == Color.white)
+            {
+                text.color = blue;
+            }
+            else
+            {
+                text.color = Color.white;
+            }
+        });
+
+        DisplayButton.onClick.AddListener(() => {
+            Text text = DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>();
+            if (text.color == Color.white)
+            {
+                text.color = blue;
+            }
+            else
+            {
+                text.color = Color.white;
+            }
+        });
+
+        BackButton.onClick.AddListener(() =>
+        {
             UdpSclient.Instance.SceneChange(SceneName.WaitScene, PanelName.WaitPanel);
         });
+    }
 
-        SetingButton.onClick.AddListener(() => {
-            TargetPosition targetPosition = new TargetPosition();
-            int x = int.Parse(PositionX.text);
-            int y = int.Parse(PositionY.text);
+    public override void Open()
+    {
+        base.Open();
+        Reset();
+    }
 
-            if(x > 40000)
-            {
-                x = 39500;
-            }
+    private void InitWeatherButtons(Button button , int i)
+    {
+        button.onClick.AddListener(()=>{
 
-            if(y > 40000)
-            {
-                y = 39500;
-            }
+            ReSetWeatherButtonSprite();
+            WeatherButtons[i].gameObject.GetComponent<Image>().sprite = Weather_Sprite_Click[i];
 
-            if(x == 0 && y == 0)
-            {
-                return;
-            }
-
-            targetPosition.x = x;
-            targetPosition.z = y;
-
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.TargetPosition, targetPosition);
+            WeatherType weatherType = new WeatherType();
+            WeatherMakerPrecipitationType type = (WeatherMakerPrecipitationType)Enum.ToObject(typeof(WeatherMakerPrecipitationType), i);
+            weatherType.weather = type.ToString();
+            weatherType.value = 0.5f;
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.WeatherType, weatherType);
         });
     }
 
-    public void SpeedChange()
+    private void ReSetWeatherButtonSprite()
     {
-        BoatSpeed index = new BoatSpeed();
-        index.speed = Speedsliders.value;
-        UdpSclient.Instance.SendDataToSever(ParmaterCodes.BoatSpeed, index);
-    }
-
-    //public void TimeChange()
-    //{
-    //    MTFrame.DateTime index = new DateTime();
-    //    index.value = sliders[1].value;
-    //    UdpSclient.Instance.SendDataToSever(ParmaterCodes.DateTime, index);
-    //}
-
-    //public void LightChange()
-    //{
-    //    OceanLightData index = new OceanLightData();
-    //    index.value = sliders[2].value;
-    //    UdpSclient.Instance.SendDataToSever(ParmaterCodes.OceanLightData, index);
-    //}
-    public void DayNightSwitch()
-    {
-        if(DayNightToggle.isOn)
+        for (int i = 0; i < WeatherButtons.Length; i++)
         {
-            DayNightTime time = new DayNightTime();
-            time.DayNight = DayNightCycle.night.ToString();
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.DayNightTime, time);
-        }
-        else
-        {
-            DayNightTime time = new DayNightTime();
-            time.DayNight = DayNightCycle.day.ToString();
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.DayNightTime, time);
+            WeatherButtons[i].gameObject.GetComponent<Image>().sprite = Weather_Sprite_NotClick[i];
         }
     }
 
+    private void InitDayNightButtons(Button button,int i)
+    {
+        button.onClick.AddListener(() => {
+
+            RestDayNightButtonSprite();
+            DayNightButtons[i].gameObject.GetComponent<Image>().sprite = DayNight_Sprite_Click[i];
+
+            DayNightTime time = new DayNightTime();
+            DayNightCycle dayNight = (DayNightCycle)Enum.ToObject(typeof(DayNightCycle), i);
+            time.DayNight = dayNight.ToString();
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.DayNightTime, time);
+        });
+    }
+
+    private void RestDayNightButtonSprite()
+    {
+        for (int i = 0; i < DayNightButtons.Length; i++)
+        {
+            DayNightButtons[i].gameObject.GetComponent<Image>().sprite = DayNight_Sprite_NotClick[i];
+        }
+    }
+
+    private void InitTrainButtons(Button button,int i)
+    {
+        button.onClick.AddListener(() => {
+
+            RestTrainButtonColor();
+            TrainButtons[i].OnClick();
+
+            TiltleText.text = TrainButtons[i].text.text;
+
+            TrainModelData data = new TrainModelData();
+            TrainModel trainModel = (TrainModel)Enum.ToObject(typeof(TrainModel), i);
+            data.trainModel = trainModel.ToString();
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.TrainModelData, data);
+        });
+    }
+
+    private void RestTrainButtonColor()
+    {
+        foreach (TrainButton item in TrainButtons)
+        {
+            item.Reset();
+        }
+    }
+
+    private void ViewFirstPerson()
+    {
+        View_Black_bg.DOAnchorPos(StartPoint, 0.1f).OnComplete(()=> {
+            ViewTextGroup[0].color = blue;
+            ViewTextGroup[1].color = Color.black;
+        });
+
+        CameraState state = new CameraState();
+        state.state = CameraSwitch.FirstPerson.ToString();
+        UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, state);
+    }
 
     public void WaveChange()
     {
@@ -118,53 +209,29 @@ public class SailingPanel : BasePanel
         UdpSclient.Instance.SendDataToSever(ParmaterCodes.OceanWaveSize, index);
     }
 
-    public void CameraChange()
+    //public void IntensityChange()
+    //{
+    //    WeatherIntensity weatherIntensity = new WeatherIntensity();
+    //    weatherIntensity.value = IntensitySlider.value;
+    //    UdpSclient.Instance.SendDataToSever(ParmaterCodes.WeatherIntensity, weatherIntensity);
+    //    IntensityText.text = IntensitySlider.value.ToString();
+    //}
+    private void Reset()
     {
-        if(CameraToggle.isOn)
-        {
-            CameraState cameraState = new CameraState();
-            cameraState.state = CameraSwitch.Open.ToString();
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, cameraState);
-        }
-        else
-        {
-            CameraState cameraState = new CameraState();
-            cameraState.state = CameraSwitch.Close.ToString();
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, cameraState);
-        }
+        ReSetWeatherButtonSprite();
+        WeatherButtons[0].gameObject.GetComponent<Image>().sprite = Weather_Sprite_Click[0];
+
+        RestDayNightButtonSprite();
+        DayNightButtons[0].gameObject.GetComponent<Image>().sprite = DayNight_Sprite_Click[0];
+
+        WaveSlider.value = 0;
+
+        ViewFirstPerson();
+
+        SwitchButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
+        DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
+
+        RestTrainButtonColor();
+        TrainButtons[0].OnClick();
     }
-
-    public void IntensityChange()
-    {
-        WeatherIntensity weatherIntensity = new WeatherIntensity();
-        weatherIntensity.value = IntensitySlider.value;
-        UdpSclient.Instance.SendDataToSever(ParmaterCodes.WeatherIntensity, weatherIntensity);
-        IntensityText.text = IntensitySlider.value.ToString();
-    }
-
-    private void WeatherChange(int value)
-    {
-        WeatherMakerPrecipitationType weatherMakerPrecipitationType;
-        switch (value)
-        {
-            case 0:
-                weatherMakerPrecipitationType = WeatherMakerPrecipitationType.None;
-                break;
-            case 1:
-                weatherMakerPrecipitationType = WeatherMakerPrecipitationType.Rain;
-                break;
-            case 2:
-                weatherMakerPrecipitationType = WeatherMakerPrecipitationType.Snow;
-                break;
-            default:
-                weatherMakerPrecipitationType = WeatherMakerPrecipitationType.None;
-                break;
-        }
-
-        WeatherType weatherType = new WeatherType();
-        weatherType.weather = weatherMakerPrecipitationType.ToString();
-        weatherType.value = IntensitySlider.value;
-        UdpSclient.Instance.SendDataToSever(ParmaterCodes.WeatherType, weatherType);
-    }
-
 }

@@ -97,6 +97,9 @@ public class UdpSclient : MonoBehaviour
             case ParmaterCodes.WeatherType:
                 response.AddParemater((byte)ParmaterCodes.WeatherType, JsonConvert.SerializeObject(obj));
                 break;
+            case ParmaterCodes.TrainModelData:
+                response.AddParemater((byte)ParmaterCodes.TrainModelData, JsonConvert.SerializeObject(obj));
+                break;
             default:
                 break;
         }
