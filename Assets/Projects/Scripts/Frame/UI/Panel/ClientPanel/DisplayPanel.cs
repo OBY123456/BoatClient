@@ -19,11 +19,19 @@ public class DisplayPanel : BasePanel
     public Button[] VideoButton;
 
     public Sprite[] Video_Sprite_click, Video_Sprite_NotClick;
+    public Sprite[] PlayButtonSprite;
 
     public Button VideoFinishButton, PlayButton, SlowButton, QuickButton;
 
     public Slider VideoSlider;
-    private float VideoLenth = 7;
+    private float CurrentVideoLenth = 0;
+    private float[] VideoLenth = {
+        26.0f,
+        20.0f,
+        19.0f,
+        20.0f,
+        16.0f,
+    };
     private float ForwordTime = 1;
 
     public Color blue;
@@ -69,7 +77,7 @@ public class DisplayPanel : BasePanel
         }
 
         VideoFinishButton.onClick.AddListener(() => {
-           
+
             Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
             display_PlayVideo.name = VideoName.结束.ToString(); ;
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.Display_PlayVideo, display_PlayVideo);
@@ -83,11 +91,13 @@ public class DisplayPanel : BasePanel
             if(IsPlay)
             {
                 SentVideoStateData(VideoControl.暂停);
+                PlayButton.gameObject.GetComponent<Image>().sprite = PlayButtonSprite[1];
                 IsPlay = false;
             }
             else
             {
                 SentVideoStateData(VideoControl.播放);
+                PlayButton.gameObject.GetComponent<Image>().sprite = PlayButtonSprite[0];
                 IsPlay = true;
             }
         });
@@ -122,6 +132,11 @@ public class DisplayPanel : BasePanel
     {
         button.onClick.AddListener(() => {
 
+            if(VideoButton[i].transform.GetChild(0).GetComponent<Text>().color == blue)
+            {
+                return;
+            }
+
             ResetVideoButtonSprite();
             VideoButton[i].gameObject.GetComponent<Image>().sprite = Video_Sprite_click[i];
             VideoButton[i].transform.GetChild(0).GetComponent<Text>().color = blue;
@@ -131,11 +146,13 @@ public class DisplayPanel : BasePanel
 
             VideControl_Mask.gameObject.SetActive(false);
 
+            CurrentVideoLenth = VideoLenth[i];
+
             VideoName panelName = (VideoName)Enum.Parse(typeof(VideoName), (i + 1).ToString());
             Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
             display_PlayVideo.name = panelName.ToString();
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.Display_PlayVideo, display_PlayVideo);
-            SetSlider(7);
+            SetSlider(CurrentVideoLenth);
             IsPlay = true;
         });
     }
@@ -147,6 +164,7 @@ public class DisplayPanel : BasePanel
             VideoButton[i].gameObject.GetComponent<Image>().sprite = Video_Sprite_NotClick[i];
             VideoButton[i].transform.GetChild(0).GetComponent<Text>().color = Color.black;
         }
+        PlayButton.gameObject.GetComponent<Image>().sprite = PlayButtonSprite[0];
     }
 
     private void SetSlider(float value)
@@ -172,7 +190,7 @@ public class DisplayPanel : BasePanel
         if(IsPlay && VideoSlider.maxValue > 1)
         {
             VideoSlider.value += Time.deltaTime;
-            if(VideoSlider.value >= VideoLenth)
+            if(VideoSlider.value >= CurrentVideoLenth)
             {
                 VideoSlider.value = 0;
             }
