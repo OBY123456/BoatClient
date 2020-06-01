@@ -13,7 +13,7 @@ public class SailingPanel : BasePanel
     public Button[] WeatherButtons;
     public Button[] DayNightButtons;
     public Button BackButton;
-    public Button SwitchButton, DisplayButton;
+    public Button SwitchButton;
     public Button[] ViewButtons;
 
     public TrainButton[] TrainButtons;
@@ -29,6 +29,9 @@ public class SailingPanel : BasePanel
 
     public Text TiltleText;
 
+    //测试用按钮
+    public Button DriveButton, ResetButton;
+
 
     public override void InitFind()
     {
@@ -39,7 +42,7 @@ public class SailingPanel : BasePanel
         DayNightButtons = FindTool.FindChildNode(transform, "DayNightButtonGroup").GetComponentsInChildren<Button>();
         BackButton = FindTool.FindChildComponent<Button>(transform, "BackButtonGroup");
         SwitchButton = FindTool.FindChildComponent<Button>(transform, "SwitchButton");
-        DisplayButton = FindTool.FindChildComponent<Button>(transform, "DisPlayButton");
+        //DisplayButton = FindTool.FindChildComponent<Button>(transform, "DisPlayButton");
         ViewButtons = FindTool.FindChildNode(transform, "ViewButtonGroup").GetComponentsInChildren<Button>();
 
         TrainButtons = FindTool.FindChildNode(transform, "TrainModelButtonGroup").GetComponentsInChildren<TrainButton>();
@@ -48,6 +51,9 @@ public class SailingPanel : BasePanel
         ViewTextGroup = FindTool.FindChildNode(transform, "ViewButtonGroup").GetComponentsInChildren<Text>();
 
         TiltleText = FindTool.FindChildComponent<Text>(transform, "TiltleText");
+
+        DriveButton = FindTool.FindChildComponent<Button>(transform, "TestButton/Button");
+        ResetButton = FindTool.FindChildComponent<Button>(transform, "TestButton/Button (1)");
     }
 
     public override void InitEvent()
@@ -85,7 +91,8 @@ public class SailingPanel : BasePanel
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, state);
         });
 
-        SwitchButton.onClick.AddListener(() => {
+        SwitchButton.onClick.AddListener(() =>
+        {
             Text text = SwitchButton.gameObject.transform.GetChild(0).GetComponent<Text>();
             if (text.color == Color.white)
             {
@@ -97,21 +104,37 @@ public class SailingPanel : BasePanel
             }
         });
 
-        DisplayButton.onClick.AddListener(() => {
-            Text text = DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>();
-            if (text.color == Color.white)
-            {
-                text.color = blue;
-            }
-            else
-            {
-                text.color = Color.white;
-            }
-        });
+        //DisplayButton.onClick.AddListener(() => {
+        //    Text text = DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>();
+        //    PuGuanCameraData data = new PuGuanCameraData();
+        //    if (text.color == Color.white)
+        //    {
+        //        text.color = blue;
+        //        data.state = PuGuanCameraState.Open.ToString();
+        //    }
+        //    else
+        //    {
+        //        text.color = Color.white;
+        //        data.state = PuGuanCameraState.Hide.ToString();
+        //    }
+        //    UdpSclient.Instance.SendDataToSever(ParmaterCodes.PuGuanCameraData, data);
+        //});
 
         BackButton.onClick.AddListener(() =>
         {
             UdpSclient.Instance.SceneChange(SceneName.WaitScene, PanelName.WaitPanel);
+        });
+
+        DriveButton.onClick.AddListener(() => {
+            AutoDriveData autoDriveData = new AutoDriveData();
+            autoDriveData.state = AutoDriveEnum.Start.ToString();
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.AutoDriveData, autoDriveData);
+        });
+
+        ResetButton.onClick.AddListener(() => {
+            AutoDriveData autoDriveData = new AutoDriveData();
+            autoDriveData.state = AutoDriveEnum.Wait.ToString();
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.AutoDriveData, autoDriveData);
         });
     }
 
@@ -131,7 +154,7 @@ public class SailingPanel : BasePanel
             WeatherType weatherType = new WeatherType();
             WeatherMakerPrecipitationType type = (WeatherMakerPrecipitationType)Enum.ToObject(typeof(WeatherMakerPrecipitationType), i);
             weatherType.weather = type.ToString();
-            weatherType.value = 0.5f;
+            weatherType.value = 1.0f;
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.WeatherType, weatherType);
         });
     }
@@ -229,7 +252,7 @@ public class SailingPanel : BasePanel
         ViewFirstPerson();
 
         SwitchButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
-        DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
+        //DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
 
         RestTrainButtonColor();
         TrainButtons[0].OnClick();

@@ -236,8 +236,8 @@ public class DisplayPanel : BasePanel
             else
             {
                 TimeInterval += Time.deltaTime;
-                if (Mathf.Abs(newPos.x - oldPos.x) > Mathf.Abs(newPos.y - oldPos.y))
-                {
+                //if (Mathf.Abs(newPos.x - oldPos.x) > Mathf.Abs(newPos.y - oldPos.y))
+                //{
                     if (newPos.x > oldPos.x)
                     {
                         ObjectManager.Instance.Cube.transform.Rotate(0, -RotateSpeed, 0,Space.World); 
@@ -246,20 +246,20 @@ public class DisplayPanel : BasePanel
                     {
                         ObjectManager.Instance.Cube.transform.Rotate(0, RotateSpeed, 0, Space.World);
                     }
-                    }
-                else if (Mathf.Abs(newPos.x - oldPos.x) < Mathf.Abs(newPos.y - oldPos.y))
-                {
-                    if (newPos.y > oldPos.y)
-                    {
-                        ObjectManager.Instance.Cube.transform.Rotate(RotateSpeed, 0, 0, Space.World);
-                        // ObjectManager.Instance.Cube.transform.localEulerAngles += new Vector3(RotateSpeed, 0, 0);
-                    }
-                    else if (newPos.y < oldPos.y)
-                    {
-                        ObjectManager.Instance.Cube.transform.Rotate(-RotateSpeed, 0, 0, Space.World);
-                        //ObjectManager.Instance.Cube.transform.localEulerAngles += new Vector3(-RotateSpeed, 0, 0);
-                    }
-                }
+                //}
+                //else if (Mathf.Abs(newPos.x - oldPos.x) < Mathf.Abs(newPos.y - oldPos.y))
+                //{
+                //    if (newPos.y > oldPos.y)
+                //    {
+                //        ObjectManager.Instance.Cube.transform.Rotate(RotateSpeed, 0, 0, Space.World);
+                //        // ObjectManager.Instance.Cube.transform.localEulerAngles += new Vector3(RotateSpeed, 0, 0);
+                //    }
+                //    else if (newPos.y < oldPos.y)
+                //    {
+                //        ObjectManager.Instance.Cube.transform.Rotate(-RotateSpeed, 0, 0, Space.World);
+                //        //ObjectManager.Instance.Cube.transform.localEulerAngles += new Vector3(-RotateSpeed, 0, 0);
+                //    }
+                //}
 
                 if(oldBoatPos == Vector3.zero)
                 {
