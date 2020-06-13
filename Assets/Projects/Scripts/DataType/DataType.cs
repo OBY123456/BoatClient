@@ -40,6 +40,7 @@ namespace MTFrame
         快退,
         暂停,
         播放,
+        重播,
     }
 
     public class Display_PlayVideo

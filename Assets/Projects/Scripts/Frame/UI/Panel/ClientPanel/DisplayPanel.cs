@@ -27,7 +27,7 @@ public class DisplayPanel : BasePanel
     private float CurrentVideoLenth = 0;
     private float[] VideoLenth = {
         26.0f,
-        20.0f,
+        21.0f,
         19.0f,
         20.0f,
         16.0f,
@@ -105,8 +105,16 @@ public class DisplayPanel : BasePanel
         QuickButton.onClick.AddListener(() => {
             if(VideoSlider.maxValue > 1)
             {
-                SentVideoStateData(VideoControl.快进);
                 VideoSlider.value += ForwordTime;
+                if (VideoSlider.value > VideoSlider.maxValue)
+                {
+                    SentVideoStateData(VideoControl.重播);
+                    VideoSlider.value = 0;
+                }
+                else
+                {
+                    SentVideoStateData(VideoControl.快进);
+                }   
             }
 
         });
@@ -114,8 +122,16 @@ public class DisplayPanel : BasePanel
         SlowButton.onClick.AddListener(() => {
             if(VideoSlider.maxValue > 1)
             {
-                SentVideoStateData(VideoControl.快退);
                 VideoSlider.value -= ForwordTime;
+                if (VideoSlider.value < 0)
+                {
+                    SentVideoStateData(VideoControl.重播);
+                    VideoSlider.value = 0;
+                }
+                else
+                {
+                    SentVideoStateData(VideoControl.快退);
+                }
             }
 
         });
@@ -146,7 +162,7 @@ public class DisplayPanel : BasePanel
 
             VideControl_Mask.gameObject.SetActive(false);
 
-            CurrentVideoLenth = VideoLenth[i];
+            CurrentVideoLenth = VideoLenth[1];
 
             VideoName panelName = (VideoName)Enum.Parse(typeof(VideoName), (i + 1).ToString());
             Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
@@ -193,6 +209,7 @@ public class DisplayPanel : BasePanel
             if(VideoSlider.value >= CurrentVideoLenth)
             {
                 VideoSlider.value = 0;
+                SentVideoStateData(VideoControl.重播);
             }
         }
 
