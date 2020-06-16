@@ -310,7 +310,7 @@ public class SailingPanel : BasePanel
         View_Black_bg2.gameObject.SetActive(true);
 
         SwitchButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
-        //DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
+        DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
 
         RestTrainButtonColor();
         TrainButtons[0].OnClick();
