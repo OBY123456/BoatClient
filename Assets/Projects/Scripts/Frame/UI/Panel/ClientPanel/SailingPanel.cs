@@ -14,7 +14,7 @@ public class SailingPanel : BasePanel
     public Button[] DayNightButtons;
     public Button BackButton;
     public Button SwitchButton;
-    public Button[] ViewButtons;
+    public Button[] ViewButtons, ViewButton2;
 
     public TrainButton[] TrainButtons;
 
@@ -22,12 +22,14 @@ public class SailingPanel : BasePanel
 
     public Color blue;
 
-    public RectTransform View_Black_bg;
-    public Text[] ViewTextGroup;
+    public RectTransform View_Black_bg, View_Black_bg2;
+    public Text[] ViewTextGroup, ViewTextGroup2;
     private Vector2 StartPoint = new Vector2(-159,0);
     private Vector2 EndPoint = new Vector2(159,0);
 
     public Text TiltleText;
+
+    public Image mask;
 
     //测试用按钮
     public Button DriveButton, ResetButton;
@@ -44,16 +46,22 @@ public class SailingPanel : BasePanel
         SwitchButton = FindTool.FindChildComponent<Button>(transform, "SwitchButton");
         //DisplayButton = FindTool.FindChildComponent<Button>(transform, "DisPlayButton");
         ViewButtons = FindTool.FindChildNode(transform, "ViewButtonGroup").GetComponentsInChildren<Button>();
+        ViewButton2 = FindTool.FindChildNode(transform, "ViewButtonGroup (1)").GetComponentsInChildren<Button>();
 
         TrainButtons = FindTool.FindChildNode(transform, "TrainModelButtonGroup").GetComponentsInChildren<TrainButton>();
 
         View_Black_bg = FindTool.FindChildComponent<RectTransform>(transform, "ViewButtonGroup/bg");
+        View_Black_bg2 = FindTool.FindChildComponent<RectTransform>(transform, "ViewButtonGroup (1)/bg");
+
         ViewTextGroup = FindTool.FindChildNode(transform, "ViewButtonGroup").GetComponentsInChildren<Text>();
+        ViewTextGroup2 = FindTool.FindChildNode(transform, "ViewButtonGroup (1)").GetComponentsInChildren<Text>();
 
         TiltleText = FindTool.FindChildComponent<Text>(transform, "TiltleText");
 
         DriveButton = FindTool.FindChildComponent<Button>(transform, "TestButton/Button");
         ResetButton = FindTool.FindChildComponent<Button>(transform, "TestButton/Button (1)");
+
+        mask = FindTool.FindChildComponent<Image>(transform, "ViewButtonGroup (1)/mask");
     }
 
     public override void InitEvent()
@@ -77,9 +85,25 @@ public class SailingPanel : BasePanel
 
         ViewButtons[0].onClick.AddListener(() => {
             ViewFirstPerson();
+            if(ViewTextGroup[0].color != blue )
+            {
+                mask.enabled = false;
+                View_Black_bg2.gameObject.SetActive(true);
+                View_Black_bg2.anchoredPosition = StartPoint;
+                ViewTextGroup2[0].gameObject.SetActive(true);
+                ViewTextGroup2[1].gameObject.SetActive(true);
+                ViewTextGroup2[0].color = blue;
+                ViewTextGroup2[1].color = Color.black;
+            }
+            
         });
 
         ViewButtons[1].onClick.AddListener(() => {
+
+            mask.enabled = true;
+            View_Black_bg2.gameObject.SetActive(false);
+            ViewTextGroup2[0].gameObject.SetActive(false);
+            ViewTextGroup2[1].gameObject.SetActive(false);
 
             View_Black_bg.DOAnchorPos(EndPoint, 0.1f).OnComplete(()=> {
                 ViewTextGroup[0].color = Color.black;
@@ -88,6 +112,22 @@ public class SailingPanel : BasePanel
 
             CameraState state = new CameraState();
             state.state = CameraSwitch.ThirdPerson.ToString();
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, state);
+        });
+
+        ViewButton2[0].onClick.AddListener(() => {
+            ViewFirstPerson2();
+        });
+
+        ViewButton2[1].onClick.AddListener(() => {
+
+            View_Black_bg2.DOAnchorPos(EndPoint, 0.1f).OnComplete(() => {
+                ViewTextGroup2[0].color = Color.black;
+                ViewTextGroup2[1].color = blue;
+            });
+
+            CameraState state = new CameraState();
+            state.state = CameraSwitch.RearView.ToString();
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, state);
         });
 
@@ -225,6 +265,18 @@ public class SailingPanel : BasePanel
         UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, state);
     }
 
+    private void ViewFirstPerson2()
+    {
+        View_Black_bg2.DOAnchorPos(StartPoint, 0.1f).OnComplete(() => {
+            ViewTextGroup2[0].color = blue;
+            ViewTextGroup2[1].color = Color.black;
+        });
+
+        CameraState state = new CameraState();
+        state.state = CameraSwitch.FirstPerson.ToString();
+        UdpSclient.Instance.SendDataToSever(ParmaterCodes.CameraState, state);
+    }
+
     public void WaveChange()
     {
         OceanWaveSize index = new OceanWaveSize();
@@ -250,6 +302,11 @@ public class SailingPanel : BasePanel
         WaveSlider.value = 0;
 
         ViewFirstPerson();
+        ViewFirstPerson2();
+        mask.enabled = false;
+        ViewTextGroup2[0].gameObject.SetActive(true);
+        ViewTextGroup2[1].gameObject.SetActive(true);
+        View_Black_bg2.gameObject.SetActive(true);
 
         SwitchButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;
         //DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>().color = Color.white;

@@ -31,7 +31,7 @@ public class UdpSclient : MonoBehaviour
         Log.WriteLine("开始");
         UserManager.Instance.LocalUser = new User() { ID = "002", nickname = "aa" };
         //不同端口号和房间名就不会连接
-        localClientEngine = new GameLocalClientEngineListener(9999, "Test4");
+        localClientEngine = new GameLocalClientEngineListener(7878, "Test3");
         localClientEngine.Search();
     }
 
