@@ -81,6 +81,6 @@ public enum ParmaterCodes : byte
     /// <summary>
     /// 模拟航行页10
     /// </summary>
-    //PuGuanCameraData,
+    PuGuanCameraData,
     AutoDriveData,
 }

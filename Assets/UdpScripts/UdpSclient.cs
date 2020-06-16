@@ -100,9 +100,9 @@ public class UdpSclient : MonoBehaviour
             case ParmaterCodes.TrainModelData:
                 response.AddParemater((byte)ParmaterCodes.TrainModelData, JsonConvert.SerializeObject(obj));
                 break;
-            //case ParmaterCodes.PuGuanCameraData:
-            //    response.AddParemater((byte)ParmaterCodes.PuGuanCameraData, JsonConvert.SerializeObject(obj));
-            //    break;
+            case ParmaterCodes.PuGuanCameraData:
+                response.AddParemater((byte)ParmaterCodes.PuGuanCameraData, JsonConvert.SerializeObject(obj));
+                break;
             case ParmaterCodes.AutoDriveData:
                 response.AddParemater((byte)ParmaterCodes.AutoDriveData, JsonConvert.SerializeObject(obj));
                 break;

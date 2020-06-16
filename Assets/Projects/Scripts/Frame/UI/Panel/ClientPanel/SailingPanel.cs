@@ -13,7 +13,7 @@ public class SailingPanel : BasePanel
     public Button[] WeatherButtons;
     public Button[] DayNightButtons;
     public Button BackButton;
-    public Button SwitchButton;
+    public Button SwitchButton, DisplayButton;
     public Button[] ViewButtons, ViewButton2;
 
     public TrainButton[] TrainButtons;
@@ -44,7 +44,7 @@ public class SailingPanel : BasePanel
         DayNightButtons = FindTool.FindChildNode(transform, "DayNightButtonGroup").GetComponentsInChildren<Button>();
         BackButton = FindTool.FindChildComponent<Button>(transform, "BackButtonGroup");
         SwitchButton = FindTool.FindChildComponent<Button>(transform, "SwitchButton");
-        //DisplayButton = FindTool.FindChildComponent<Button>(transform, "DisPlayButton");
+        DisplayButton = FindTool.FindChildComponent<Button>(transform, "DisPlayButton");
         ViewButtons = FindTool.FindChildNode(transform, "ViewButtonGroup").GetComponentsInChildren<Button>();
         ViewButton2 = FindTool.FindChildNode(transform, "ViewButtonGroup (1)").GetComponentsInChildren<Button>();
 
@@ -144,21 +144,22 @@ public class SailingPanel : BasePanel
             }
         });
 
-        //DisplayButton.onClick.AddListener(() => {
-        //    Text text = DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>();
-        //    PuGuanCameraData data = new PuGuanCameraData();
-        //    if (text.color == Color.white)
-        //    {
-        //        text.color = blue;
-        //        data.state = PuGuanCameraState.Open.ToString();
-        //    }
-        //    else
-        //    {
-        //        text.color = Color.white;
-        //        data.state = PuGuanCameraState.Hide.ToString();
-        //    }
-        //    UdpSclient.Instance.SendDataToSever(ParmaterCodes.PuGuanCameraData, data);
-        //});
+        DisplayButton.onClick.AddListener(() =>
+        {
+            Text text = DisplayButton.gameObject.transform.GetChild(0).GetComponent<Text>();
+            PuGuanCameraData data = new PuGuanCameraData();
+            if (text.color == Color.white)
+            {
+                text.color = blue;
+                data.state = PuGuanCameraState.Open.ToString();
+            }
+            else
+            {
+                text.color = Color.white;
+                data.state = PuGuanCameraState.Hide.ToString();
+            }
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.PuGuanCameraData, data);
+        });
 
         BackButton.onClick.AddListener(() =>
         {
