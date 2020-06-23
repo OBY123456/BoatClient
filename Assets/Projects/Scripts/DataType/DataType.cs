@@ -200,13 +200,82 @@ namespace MTFrame
     {
         public string state;
     }
-    public enum AutoDriveEnum
+    public enum AutoDriveSwitch
     {
-        Start,
-        Wait,
+        Open = 0,
+        Close = 1,
+        Reset = 2,
     }
 
     public class AutoDriveData
+    {
+        public string state;
+    }
+
+    public enum DriveTurn
+    {
+        //左转
+        TurnLeft = 0,
+        //右转
+        TurnRight = 1,
+        //倒退
+        TurnBack = 2,
+        //完成
+        Complete = 3,
+    }
+
+    public class DriveTurnData
+    {
+        public string state;
+    }
+
+    public class DriveSpeed
+    {
+        public int value;
+    }
+
+    //铺管训练
+    public enum PuGuanSwitch
+    {
+        //开始
+        Open = 0,
+        //结束
+        Close = 1,
+        //重置
+        //Reset = 2,
+    }
+
+    public class PuGuanSwitchData
+    {
+        public string state;
+    }
+
+    //转台，旋转范围0~360
+    public class TurnTableData
+    {
+        public float value;
+    }
+
+    //吊臂，仰角范围0~30
+    public class CraneHandData
+    {
+        public float value;
+    }
+
+    //吊勾
+    public enum HookState
+    {
+        //下降
+        Down,
+        //上升
+        Up,
+        //停止
+        Stop,
+        //重置
+        Reset,
+    }
+
+    public class HookData
     {
         public string state;
     }

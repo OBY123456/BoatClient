@@ -82,5 +82,32 @@ public enum ParmaterCodes : byte
     /// 模拟航行页10
     /// </summary>
     PuGuanCameraData,
+    /// <summary>
+    /// 模拟航行页11
+    /// </summary>
     AutoDriveData,
+    /// <summary>
+    /// 模拟航行页12
+    /// </summary>
+    DriveTurnData,
+    /// <summary>
+    /// 模拟航行页13
+    /// </summary>
+    DriveSpeed,
+    /// <summary>
+    /// 模拟航行页14
+    /// </summary>
+    PuGuanSwitchData,
+    /// <summary>
+    /// 模拟航行页15
+    /// </summary>
+    TurnTableData,
+    /// <summary>
+    /// 模拟航行页16
+    /// </summary>
+    CraneHandData,
+    /// <summary>
+    /// 模拟航行页17
+    /// </summary>
+    HookData,
 }

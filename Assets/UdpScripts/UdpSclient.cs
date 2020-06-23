@@ -106,6 +106,24 @@ public class UdpSclient : MonoBehaviour
             case ParmaterCodes.AutoDriveData:
                 response.AddParemater((byte)ParmaterCodes.AutoDriveData, JsonConvert.SerializeObject(obj));
                 break;
+            case ParmaterCodes.DriveTurnData:
+                response.AddParemater((byte)ParmaterCodes.DriveTurnData, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.DriveSpeed:
+                response.AddParemater((byte)ParmaterCodes.DriveSpeed, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.PuGuanSwitchData:
+                response.AddParemater((byte)ParmaterCodes.PuGuanSwitchData, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.TurnTableData:
+                response.AddParemater((byte)ParmaterCodes.TurnTableData, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.CraneHandData:
+                response.AddParemater((byte)ParmaterCodes.CraneHandData, JsonConvert.SerializeObject(obj));
+                break;
+            case ParmaterCodes.HookData:
+                response.AddParemater((byte)ParmaterCodes.HookData, JsonConvert.SerializeObject(obj));
+                break;
             default:
                 break;
         }
