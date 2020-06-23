@@ -182,7 +182,7 @@ public class ZhuanChangPanel : BasePanel
 
             AutoDrive.Reset();
             ManualDrive.Reset();
-
+            sailingPanel.PuguanPanel.Reset();
         });
     }
 
