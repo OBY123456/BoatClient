@@ -267,6 +267,13 @@ public class ZhuanChangPanel : BasePanel
         mask.blocksRaycasts = false;
     }
 
+    public void WaveChange()
+    {
+        OceanWaveSize waveSize = new OceanWaveSize();
+        waveSize.value = WaveSlider.value;
+        UdpSclient.Instance.SendDataToSever(ParmaterCodes.OceanWaveSize, waveSize);
+    }
+
     public void Reset()
     {
         ReSetWeatherButtonSprite();

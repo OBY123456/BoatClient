@@ -101,12 +101,16 @@ public class SailingPanel : BasePanel
             RestTrainButtonColor();
             TrainButtons[i].OnClick();
 
-            TiltleText.text = TrainButtons[i].text.text;
+            if(!TiltleText.text.Contains(TrainButtons[i].text.text))
+            {
+                TiltleText.text = TrainButtons[i].text.text;
 
-            TrainModelData data = new TrainModelData();
-            TrainModel trainModel = (TrainModel)Enum.ToObject(typeof(TrainModel), i);
-            data.trainModel = trainModel.ToString();
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.TrainModelData, data);
+                TrainModelData data = new TrainModelData();
+                TrainModel trainModel = (TrainModel)Enum.ToObject(typeof(TrainModel), i);
+                data.trainModel = trainModel.ToString();
+                UdpSclient.Instance.SendDataToSever(ParmaterCodes.TrainModelData, data);
+            }
+
         });
     }
 

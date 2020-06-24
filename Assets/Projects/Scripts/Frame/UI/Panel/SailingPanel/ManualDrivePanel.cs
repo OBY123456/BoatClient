@@ -43,7 +43,7 @@ public class ManualDrivePanel : BasePanel
                 blueButtons[0].state = BlueButton.State.write;
             }
             ResetBlueButtons(0);
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.AutoDriveData, turnData);
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.DriveTurnData, turnData);
         });
 
         blueButtons[1].button.onClick.AddListener(() => {
@@ -62,36 +62,34 @@ public class ManualDrivePanel : BasePanel
                 blueButtons[1].state = BlueButton.State.write;
             }
             ResetBlueButtons(1);
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.AutoDriveData, turnData);
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.DriveTurnData, turnData);
         });
 
         blueButtons[2].button.onClick.AddListener(() => {
 
             DriveTurnData turnData = new DriveTurnData();
+            turnData.state = DriveTurn.TurnBack.ToString();
             if (blueButtons[2].state == BlueButton.State.write)
             {
-                turnData.state = DriveTurn.TurnBack.ToString();
+                
                 blueButtons[2].text.color = blueButtons[2].blue;
                 blueButtons[2].state = BlueButton.State.blue;
             }
             else
             {
-                turnData.state = DriveTurn.Complete.ToString();
                 blueButtons[2].text.color = Color.white;
                 blueButtons[2].state = BlueButton.State.write;
             }
-            ResetBlueButtons(2);
-            UdpSclient.Instance.SendDataToSever(ParmaterCodes.AutoDriveData, turnData);
+            //ResetBlueButtons(2);
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.DriveTurnData, turnData);
         });
 
         ResetButton.onClick.AddListener(() => {
             AutoDriveData autoDriveData = new AutoDriveData();
             autoDriveData.state = AutoDriveSwitch.Reset.ToString();
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.AutoDriveData, autoDriveData);
-            foreach (BlueButton item in blueButtons)
-            {
-                item.Reset();
-            }
+            Reset();
+            ZhuanchangPanel.sailingPanel.PuguanPanel.Reset();
         });
 
         AutoDriveButton.onClick.AddListener(() => {
@@ -103,7 +101,7 @@ public class ManualDrivePanel : BasePanel
 
     private void ResetBlueButtons(int number)
     {
-        for (int i = 0; i < blueButtons.Length; i++)
+        for (int i = 0; i < blueButtons.Length -1; i++)
         {
             if(i!= number)
             {
