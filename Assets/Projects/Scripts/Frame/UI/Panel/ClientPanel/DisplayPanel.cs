@@ -26,11 +26,11 @@ public class DisplayPanel : BasePanel
     public Slider VideoSlider;
     private float CurrentVideoLenth = 0;
     private float[] VideoLenth = {
-        26.0f,
-        21.0f,
-        19.0f,
-        20.0f,
-        16.0f,
+        54.0f,
+        29.0f,
+        55.0f,
+        60.0f,
+        32.0f,
     };
     private float ForwordTime = 1;
 
@@ -162,7 +162,7 @@ public class DisplayPanel : BasePanel
 
             VideControl_Mask.gameObject.SetActive(false);
 
-            CurrentVideoLenth = VideoLenth[1];
+            CurrentVideoLenth = VideoLenth[i];
 
             VideoName panelName = (VideoName)Enum.Parse(typeof(VideoName), (i + 1).ToString());
             Display_PlayVideo display_PlayVideo = new Display_PlayVideo();

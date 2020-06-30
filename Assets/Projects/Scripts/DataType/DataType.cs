@@ -273,6 +273,8 @@ namespace MTFrame
         Stop,
         //重置
         Reset,
+        //松开
+        PutDown,
     }
 
     public class HookData

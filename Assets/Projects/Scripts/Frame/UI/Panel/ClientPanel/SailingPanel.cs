@@ -100,8 +100,7 @@ public class SailingPanel : BasePanel
 
             RestTrainButtonColor();
             TrainButtons[i].OnClick();
-
-            if(!TiltleText.text.Contains(TrainButtons[i].text.text))
+            if(TiltleText.text != TrainButtons[i].text.text)
             {
                 TiltleText.text = TrainButtons[i].text.text;
 
@@ -130,5 +129,6 @@ public class SailingPanel : BasePanel
         PuguanPanel.Reset();
         DiaozhuangPanel.Hide();
         ZhuanChangPanel.Open();
+        TiltleText.text = "转场训练";
     }
 }

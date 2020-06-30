@@ -20,7 +20,7 @@ public class DiaoZhuangPanel : BasePanel
         CraneHandText = FindTool.FindChildComponent<Text>(transform, "bg/CraneHand/Text (1)");
         HookDown = FindTool.FindChildComponent<BlueButton>(transform, "bg/HookButtonGroup/Hook-Down");
         HookUp = FindTool.FindChildComponent<BlueButton>(transform, "bg/HookButtonGroup/Hook-Up");
-        StopButton = FindTool.FindChildComponent<Button>(transform, "bg/ButtonGroup/Stop");
+        StopButton = FindTool.FindChildComponent<Button>(transform, "bg/ButtonGroup/PutDown");
         ResetButton = FindTool.FindChildComponent<Button>(transform, "bg/ButtonGroup/Reset");
     }
 
@@ -67,7 +67,7 @@ public class DiaoZhuangPanel : BasePanel
             HookDown.Reset();
             HookUp.Reset();
             HookData hookData = new HookData();
-            hookData.state = HookState.Stop.ToString();
+            hookData.state = HookState.PutDown.ToString();
             UdpSclient.Instance.SendDataToSever(ParmaterCodes.HookData, hookData);
         });
 
@@ -83,15 +83,15 @@ public class DiaoZhuangPanel : BasePanel
     {
         TurnTableText.text =(int)TurnTableSlider.value + "°";
         TurnTableData Data = new TurnTableData();
-        Data.value = (int)TurnTableSlider.value;
+        Data.value = TurnTableSlider.value;
         UdpSclient.Instance.SendDataToSever(ParmaterCodes.TurnTableData, Data);
     }
 
     public void CraneHandValueChange()
     {
-        CraneHandText.text = CraneHandSlider.value + "°";
+        CraneHandText.text = (int)CraneHandSlider.value + "°";
         CraneHandData Data = new CraneHandData();
-        Data.value = TurnTableSlider.value;
+        Data.value = CraneHandSlider.value;
         UdpSclient.Instance.SendDataToSever(ParmaterCodes.CraneHandData, Data);
     }
 

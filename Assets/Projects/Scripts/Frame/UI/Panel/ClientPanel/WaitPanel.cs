@@ -8,6 +8,7 @@ public class WaitPanel : BasePanel
 {
     public Button DisplayButton, xunlianButton;
 
+
     public override void InitFind()
     {
         base.InitFind();
