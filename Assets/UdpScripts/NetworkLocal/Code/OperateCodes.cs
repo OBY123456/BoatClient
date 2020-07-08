@@ -110,4 +110,8 @@ public enum ParmaterCodes : byte
     /// 模拟航行页17
     /// </summary>
     HookData,
+    /// <summary>
+    /// 模拟航行页18
+    /// </summary>
+    ControlSwitchData,
 }

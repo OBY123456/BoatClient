@@ -15,6 +15,7 @@ public class ZhuanChangPanel : BasePanel
     //public Button SwitchButton, DisplayButton;
     public BlueButton SwitchButton, DisplayButton;
     public BlueButton AutoDrive, ManualDrive;
+    public Button DataButton;
 
     public Sprite[] Weather_Sprite_Click, Weather_Sprite_NotClick, DayNight_Sprite_Click, DayNight_Sprite_NotClick;
 
@@ -24,6 +25,7 @@ public class ZhuanChangPanel : BasePanel
 
     public ManualDrivePanel ManualdrivePanel;
     public SailingPanel sailingPanel;
+
 
     public CanvasGroup mask;
 
@@ -50,6 +52,9 @@ public class ZhuanChangPanel : BasePanel
         mask = FindTool.FindChildComponent<CanvasGroup>(transform, "mask");
 
         sailingPanel = FindTool.FindParentComponent<SailingPanel>(transform);
+
+        DataButton = FindTool.FindChildComponent<Button>(transform, "DataButton");
+        
     }
 
     public override void InitEvent()
@@ -113,16 +118,24 @@ public class ZhuanChangPanel : BasePanel
 
         SwitchButton.button.onClick.AddListener(() =>
         {
+            ControlSwitchData controlSwitchData = new ControlSwitchData();
             if (SwitchButton.state == BlueButton.State.blue)
             {
                 SwitchButton.text.color = Color.white;
                 SwitchButton.state = BlueButton.State.write;
+                controlSwitchData.state = ControlSwitch.Hide.ToString();
             }
             else
             {
                 SwitchButton.text.color = SwitchButton.blue;
                 SwitchButton.state = BlueButton.State.blue;
+                controlSwitchData.state = ControlSwitch.Open.ToString();  
             }
+            UdpSclient.Instance.SendDataToSever(ParmaterCodes.ControlSwitchData, controlSwitchData);
+
+            ManualDrive.Reset();
+            AutoDrive.Reset();
+            sailingPanel.PuguanPanel.SwitchButton.Reset();
         });
 
         DisplayButton.button.onClick.AddListener(() =>
@@ -183,6 +196,10 @@ public class ZhuanChangPanel : BasePanel
             AutoDrive.Reset();
             ManualDrive.Reset();
             sailingPanel.PuguanPanel.Reset();
+        });
+
+        DataButton.onClick.AddListener(() => {
+            sailingPanel.DatatestPanel.Open();
         });
     }
 

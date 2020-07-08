@@ -17,7 +17,7 @@ public class SailingPanel : BasePanel
     public ZhuanChangPanel ZhuanChangPanel;
     public PuGuanPanel PuguanPanel;
     public DiaoZhuangPanel DiaozhuangPanel;
-
+    public DataTestPanel DatatestPanel;
 
     public override void InitFind()
     {
@@ -32,6 +32,7 @@ public class SailingPanel : BasePanel
         PuguanPanel = FindTool.FindChildComponent<PuGuanPanel>(transform, "PuGuanPanel");
 
         DiaozhuangPanel = FindTool.FindChildComponent<DiaoZhuangPanel>(transform, "DiaoZhuangPanel");
+        DatatestPanel = FindTool.FindChildComponent<DataTestPanel>(transform, "DataTestPanel");
 
     }
 

@@ -124,6 +124,9 @@ public class UdpSclient : MonoBehaviour
             case ParmaterCodes.HookData:
                 response.AddParemater((byte)ParmaterCodes.HookData, JsonConvert.SerializeObject(obj));
                 break;
+            case ParmaterCodes.ControlSwitchData:
+                response.AddParemater((byte)ParmaterCodes.ControlSwitchData, JsonConvert.SerializeObject(obj));
+                break;
             default:
                 break;
         }

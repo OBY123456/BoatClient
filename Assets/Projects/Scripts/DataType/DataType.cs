@@ -277,8 +277,169 @@ namespace MTFrame
         PutDown,
     }
 
+    //大屏端控制权切换
+    public enum ControlSwitch
+    {
+        Open = 0,
+        Hide = 1,
+    }
+
+    public class ControlSwitchData
+    {
+        public string state;
+    }
+
     public class HookData
     {
         public string state;
+    }
+
+    /*模拟航行页——UI接口数据类型*/
+    //Time
+    public class TimeData
+    {
+        public int Hours;
+        public int Minutes;
+        public int Seconds;
+    }
+
+    //Temperature
+    public class TemperatureData
+    {
+        public float value;
+    }
+
+    //Depth,范围0~5000
+    public class DepthData
+    {
+        public float value;
+    }
+
+    //Rote of turn ,范围-30~30
+    public class RoteOfTurnData
+    {
+        public float value;
+    }
+
+    //Log 
+    public class LogData
+    {
+        //艏部横向速度
+        public float value1;
+        //尾部横向速度
+        public float value2;
+        //纵向速度
+        public float value3;
+    }
+
+    //位置枚举类型
+    public enum Direction
+    {
+        //主左
+        Left = 1,
+        //主右
+        Right = 2,
+        //左下UI面板
+        LeftDown = 3,
+    }
+
+    //RPM,范围0~110,Azimuth Angle,范围-180~180,Pitch,范围0~110
+    public class RAPData
+    {
+        //Direction转字符串赋值
+        public string direction;
+        public float RPMValue;
+        public float AngleValue;
+        public float PitchValue;
+    }
+
+    //Gyro,范围0~360
+    public class GyroData
+    {
+        public float value;
+    }
+
+    //Roll,范围-20~20
+    public class RollData
+    {
+        public float value;
+    }
+
+    //Rel·direction,范围-180~180
+    public class RelDirectionData
+    {
+        public float value;
+    }
+
+    //Rel·speed
+    public class RelSpeedData
+    {
+        public float value;
+    }
+
+    //推进器状态
+    public class PropellerState
+    {
+        //推进器准备好框内文本
+        public string msg1;
+        //推进器运行框内文本
+        public string msg2;
+    }
+
+    //发电机组数据
+    public class GeneratorData
+    {
+        /// <summary>
+        /// 发电机组在线框内文本
+        /// </summary>
+        public string msg;
+        /// <summary>
+        /// 发电机组当前功率数值
+        /// </summary>
+        public float Generatorvalue;
+        /// <summary>
+        /// 开关状态框内文本
+        /// </summary>
+        public string state;
+        /// <summary>
+        /// 配电板当前功率
+        /// </summary>
+        public float PeiDianBanValue;
+    }
+
+    //wind,范围-180~180
+    public class WindData
+    {
+        public float value;
+    }
+
+    //true
+    public class TrueData
+    {
+        //TRUE下第一个数据
+        public float value1;
+        //True下第二个数据
+        public float value2;
+    }
+
+    //RELATIVE
+    public class RelativeData
+    {
+        //Relative下第一个数据
+        public float value1;
+        //Relative下第二个数据
+        public float value2;
+    }
+
+
+    //ROT等多项数据
+    public class RotData
+    {
+        public float Rotvalue;
+        public float Maonvalue;
+        public float Gyrovalue;
+        public float Cobvalue;
+        public float Bogvalue;
+        public float Pitchvalue;
     }
 }
